@@ -20,7 +20,7 @@ Para rodar o projeto na máquina local é necessário rodar os seguintes comando
 
 ##### `npm install`
 
-##### `npm start`
+##### `npm dev`
 
 
 Por padrão a aplicação rodará localmente na porta 3000.
