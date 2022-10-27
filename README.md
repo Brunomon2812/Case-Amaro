@@ -1,5 +1,4 @@
 # Amaro Back-End Challenge 👕
-                           👖
 
 ## 🚀 Descrição do Projeto
 
@@ -7,7 +6,7 @@ O projeto é um case proposto pela empresa Amaro, e consiste na criação de uma
 
 ## 📋 Funcionalidades
 
-- O sistema permite de forma simplificada, a consulta de produtos por: id, nome ou tags. Caso a consulta seja por uma tag ou nome, sera exibida a lista com todos os produtos com aquela respectiva busca.
+ O sistema permite de forma simplificada, a consulta de produtos por: id, nome ou tags. Caso a consulta seja por uma tag ou nome, sera exibida a lista com todos os produtos com aquela respectiva busca.
 
 ## 🔗 Link para a documentação no Postman
 [Postman](https://documenter.getpostman.com/view/21554400/2s8YK4t7pC) :link:
@@ -20,9 +19,9 @@ Para rodar o projeto na máquina local é necessário rodar os seguintes comando
 ##### `cd ../case-backend-amaro`
 
 ##### `npm install`
-```
-#### `npm start`
-```
+
+##### `npm start`
+
 
 Por padrão a aplicação rodará localmente na porta 3000.
 
@@ -30,9 +29,14 @@ Por padrão a aplicação rodará localmente na porta 3000.
 
 - [TypeScript](https://www.typescriptlang.org/)  
 - [Node.JS](https://nodejs.org/en/) 
-- [Knex](https://knexjs.org/) - 
-- [Render](https://render.com/) - 
-- [Jest](https://jestjs.io/) - 
+- [Knex](https://knexjs.org/)  
+- [Render](https://render.com/) 
+- [Jest](https://jestjs.io/) 
+
+Foram realizados **testes unitários** neste projeto com o _framework_ Jest.
+A cobertura de testes pode ser conferida na imagem abaixo.
+<br><br>
+![Screen Shot 2022-10-27 at 2 43 29 PM](https://user-images.githubusercontent.com/104601906/198384952-9b62685f-3ceb-4e81-b28f-17b509367e21.png)
 
 ## Repositório com o desafio proposto
 
