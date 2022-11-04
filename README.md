@@ -39,9 +39,7 @@ A cobertura de testes pode ser conferida na imagem abaixo.
 ![Screen Shot 2022-10-27 at 2 43 29 PM](https://user-images.githubusercontent.com/104601906/198384952-9b62685f-3ceb-4e81-b28f-17b509367e21.png)
 
 ## Repositório com o desafio proposto
-
-https://github.com/amaroteam/back-end-challenge
-
+[Desafio Amaro](https://github.com/amaroteam/back-end-challenge)
 
 ## AUTOR
 
