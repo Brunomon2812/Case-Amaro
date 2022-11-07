@@ -7,6 +7,9 @@ O projeto é um case proposto pela empresa Amaro, e consiste na criação de uma
 ## 📋 Funcionalidades
 
  O sistema permite de forma simplificada, a consulta de produtos por: id, nome ou tags. Caso a consulta seja por uma tag ou nome, sera exibida a lista com todos os produtos com aquela respectiva busca.
+ 
+ ## 🔗 Link para o deploy na AWS
+[API](http://ec2-44-203-71-98.compute-1.amazonaws.com/products)
 
 ## 🔗 Link para a documentação no Postman
 [Postman](https://documenter.getpostman.com/view/21554400/2s8YK4t7pC) :link:
