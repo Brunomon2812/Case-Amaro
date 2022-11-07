@@ -26,8 +26,6 @@ Para rodar o projeto na máquina local é necessário rodar os seguintes comando
 ##### `npm dev`
 
 
-Por padrão a aplicação rodará localmente na porta 3000.
-
 ## 🛠️ Tecnologias Utilizadas
 
 - [TypeScript](https://www.typescriptlang.org/)  
