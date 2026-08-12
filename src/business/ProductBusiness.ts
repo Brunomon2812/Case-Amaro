@@ -29,9 +29,11 @@ export class ProductBusiness {
             throw new ParamsError("Invalid 'name' parameter: must be at least 3 characters long")
         }
 
-        const isProductAlreadyExists = await this.productDatabase.findProductByIdAndName(input)
+        const existingProducts = await this.productDatabase.findProductByIdAndName(input)
 
-        if (isProductAlreadyExists) {
+        // findProductByIdAndName resolves to a Knex select, so it is an array that is
+        // empty when nothing matched. Checking the array itself is always truthy.
+        if (existingProducts && existingProducts.length > 0) {
             throw new ConflictError("Product already registered")
         }
 
@@ -90,6 +92,9 @@ export class ProductBusiness {
 
     public searchProducts = async (search: string): Promise<IProductDB[]> => {
 
+        if (typeof search !== "string" || search.trim().length === 0) {
+            throw new ParamsError("Invalid 'search' parameter: must not be empty")
+        }
 
         const productDB = await this.productDatabase.findProductByIdOrName(search)
 

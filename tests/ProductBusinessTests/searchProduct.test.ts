@@ -1,6 +1,4 @@
 import { ProductBusiness } from "../../src/business/ProductBusiness"
-import { BaseError } from "../../src/errors/BaseError"
-import { IProductDB } from "../../src/models/Product"
 import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"
 import { ProductDatabaseMock } from "../mocks/ProductDatabaseMock"
@@ -12,88 +10,42 @@ describe("ProductBusiness.searchProducts", () => {
         new HashManagerMock(),
     )
 
-    test("returns the products matching the search term", async () => {
-        const searchProduct = "BABADO" 
+    test("matches on part of a product name", async () => {
+        const response = await productBusiness.searchProducts("vestido")
 
-        const response = await productBusiness.searchProducts(searchProduct)
         expect(response).toEqual([
-            {
-                "id": "8104",
-                "name": "VESTIDO BABADO TURTLENECK",
-                "tags": []
-            },
-            {
-                "id": "8109",
-                "name": "VESTIDO BABADOS HORIZONTAIS",
-                "tags": []
-            },
-            {
-                "id": "8119",
-                "name": "VESTIDO BABADOS KNIT",
-                "tags": []
-            },
-            {
-                "id": "7518",
-                "name": "VESTIDO CAMISETA FANCY",
-                "tags": []
-            },
-            {
-                "id": "7533",
-                "name": "VESTIDO COTTON DOUBLE",
-                "tags": []
-            },
-            {
-                "id": "8363",
-                "name": "VESTIDO CURTO MANGA LONGA LUREX",
-                "tags": [
-                    "colorido",
-                    "metal",
-                    "delicado",
-                    "estampas",
-                    "passeio"
-                ]
-            },
-            {
-                "id": "8310",
-                "name": "VESTIDO CURTO PONTO ROMA MANGA",
-                "tags": [
-                    "casual",
-                    "metal",
-                    "delicado",
-                    "descolado",
-                    "elastano",
-                    "estampas"
-                ]
-            },
-            {
-                "id": "8080",
-                "name": "VESTIDO CURTO RENDA VISCOSE",
-                "tags": []
-            },
-            {
-                "id": "8264",
-                "name": "VESTIDO CURTO VELUDO CRISTAL",
-                "tags": []
-            },
-            {
-                "id": "8293",
-                "name": "VESTIDO CURTO VELUDO RECORTE GOLA",
-                "tags": []
-            }
+            { id: "id-mock", name: "Vestido Mock" },
         ])
-})
+    })
 
-test("returns an error when the search field is empty", async () => {
-    try {
-        const searchProduct = ""
-        await productBusiness.searchProducts(searchProduct)
-    } catch (error) {
-        if (error instanceof BaseError){
+    test("matches on an exact id", async () => {
+        const response = await productBusiness.searchProducts("id-mock2")
 
-            expect(error.statusCode).toEqual(400)
-            expect(error.message).toEqual(`Type the product you are searching for`)
-        }
-    }
+        expect(response).toEqual([
+            { id: "id-mock2", name: "Blusa Mock" },
+        ])
+    })
 
-})
+    test("matches on a tag, returning the products carrying it", async () => {
+        // "casual" is seeded as a tag on id-mock2 and matches no product name
+        const response = await productBusiness.searchProducts("casual")
+
+        expect(response).toEqual([
+            { id: "id-mock2", name: "Blusa Mock" },
+        ])
+    })
+
+    test("returns an empty list when nothing matches", async () => {
+        const response = await productBusiness.searchProducts("no-such-product")
+
+        expect(response).toEqual([])
+    })
+
+    test("rejects an empty search term", async () => {
+        await expect(productBusiness.searchProducts("   "))
+            .rejects.toMatchObject({
+                statusCode: 400,
+                message: "Invalid 'search' parameter: must not be empty",
+            })
+    })
 })

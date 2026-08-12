@@ -1,13 +1,9 @@
 import { ProductBusiness } from "../../src/business/ProductBusiness"
-import { BaseError } from "../../src/errors/BaseError"
 import { ICreateProductInputDTO } from "../../src/models/Product"
 import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"
 import { ProductDatabaseMock } from "../mocks/ProductDatabaseMock"
 
-// Groups related tests into a suite.
-// The first argument describes the group.
-// The second argument is a callback holding the tests, usually an arrow function.
 describe("ProductBusiness.createProduct", () => {
     const productBusiness = new ProductBusiness(
         new ProductDatabaseMock(),
@@ -15,107 +11,85 @@ describe("ProductBusiness.createProduct", () => {
         new HashManagerMock(),
     )
 
-    // Each test lives inside the describe callback.
-    // The first argument describes the test, the second is a callback that may be async.
-    // expect() is the assertion Jest evaluates.
-    test("creates a product successfully", async () => {
-        let input: ICreateProductInputDTO = {
+    test("creates a product that is not registered yet", async () => {
+        const input: ICreateProductInputDTO = {
             id: "8314",
             name: "VESTIDO PLISSADO ACINTURADO",
             tags: ["casual", "viagem", "delicado"]
         }
+
         const response = await productBusiness.createProduct(input)
-        expect(response.message).toEqual(`Product created successfully!`)
+
+        expect(response.message).toEqual("Product created successfully!")
     })
 
-
-    test("returns an error when the product is not registered", async () => {
-        try {
-            let input: ICreateProductInputDTO = {
-                id: "8314",
-                name: "VESTIDO PLISSADO ACINTURADO",
-                tags: ["casual", "viagem", "delicado"]
-            }
-            await productBusiness.createProduct(input)
-        } catch (error: unknown) {
-            if (error instanceof BaseError) {
-                expect(error.statusCode).toEqual(409)
-                expect(error.message).toEqual(`Not authenticated`)
-
-            }
+    test("rejects a product whose id is already registered", async () => {
+        const input: ICreateProductInputDTO = {
+            id: "id-mock",
+            name: "VESTIDO PLISSADO ACINTURADO",
+            tags: ["casual"]
         }
 
+        await expect(productBusiness.createProduct(input))
+            .rejects.toMatchObject({
+                statusCode: 409,
+                message: "Product already registered",
+            })
     })
 
-
-    test("returns an error when the product is not registered", async () => {
-        try {
-            let input: ICreateProductInputDTO = {
-                id: "",
-                name: "VESTIDO PLISSADO ACINTURADO",
-                tags: ["casual", "viagem", "delicado"]
-            }
-            await productBusiness.createProduct(input)
-        } catch (error: unknown) {
-            if (error instanceof BaseError) {
-                expect(error.statusCode).toEqual(409)
-                expect(error.message).toEqual(`Product already registered`)
-
-            }
+    test("rejects a product whose name is already registered", async () => {
+        const input: ICreateProductInputDTO = {
+            id: "8314",
+            name: "Vestido Mock",
+            tags: ["casual"]
         }
 
+        await expect(productBusiness.createProduct(input))
+            .rejects.toMatchObject({
+                statusCode: 409,
+                message: "Product already registered",
+            })
     })
 
-    test("returns an error when the product already exists", async () => {
-        try {
-            let input: ICreateProductInputDTO = {
-                id: "8314",
-                name: "VESTIDO PLISSADO ACINTURADO",
-                tags: ["casual", "viagem", "delicado"]
-            }
-            await productBusiness.createProduct(input)
-        } catch (error: unknown) {
-            if (error instanceof BaseError) {
-                expect(error.statusCode).toEqual(409)
-                expect(error.message).toEqual(`Product already registered`)
+    test("rejects a name that is not a string", async () => {
+        const input = {
+            id: "8314",
+            name: 12345,
+            tags: ["casual"]
+        } as unknown as ICreateProductInputDTO
 
-            }
-        }
+        await expect(productBusiness.createProduct(input))
+            .rejects.toMatchObject({
+                statusCode: 400,
+                message: "Invalid 'name' parameter: must be a string",
+            })
     })
 
+    test("rejects an id that is not a string", async () => {
+        const input = {
+            id: 8314,
+            name: "VESTIDO PLISSADO ACINTURADO",
+            tags: ["casual"]
+        } as unknown as ICreateProductInputDTO
 
-    test("returns an error when name is not a string", async () => {
-        try {
-            const input = {
-                id: `8314`,
-                name: 12345,
-                tags: [`casual", "viagem", "delicado`]
-            } as unknown as ICreateProductInputDTO
-
-            await productBusiness.createProduct(input)
-        } catch (error: unknown) {
-            if (error instanceof BaseError) {
-                expect(error.statusCode).toEqual(400)
-                expect(error.message).toEqual(`Invalid 'name' parameter: must be a string`)
-            }
-        }
+        await expect(productBusiness.createProduct(input))
+            .rejects.toMatchObject({
+                statusCode: 400,
+                message: "Invalid 'id' parameter: must be a string",
+            })
     })
 
-    test("returns an error when name is shorter than 3 characters", async () => {
-        try {
-            const input = {
-                id: `8314`,
-                name: "Br",
-                tags: [`casual", "viagem", "delicado`]
-            } as unknown as ICreateProductInputDTO
-
-            await productBusiness.createProduct(input)
-        } catch (error: unknown) {
-            if (error instanceof BaseError) {
-                expect(error.statusCode).toEqual(400)
-                expect(error.message).toEqual(`Invalid 'name' parameter: must be at least 3 characters long`)
-            }
+    test("rejects a name shorter than 3 characters", async () => {
+        const input: ICreateProductInputDTO = {
+            id: "8314",
+            name: "Br",
+            tags: ["casual"]
         }
 
+        await expect(productBusiness.createProduct(input))
+            .rejects.toMatchObject({
+                statusCode: 400,
+                message: "Invalid 'name' parameter: must be at least 3 characters long",
+            })
     })
 })

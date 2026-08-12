@@ -38,6 +38,8 @@ Base path: `/products`
 | `GET` | `/products` | List every registered product |
 | `GET` | `/products/search?key=<term>` | Search by id, name or tag |
 
+An empty `key` is rejected with `400` rather than returning the whole catalogue.
+
 **Postman documentation:** https://documenter.getpostman.com/view/21554400/2s8YK4t7pC
 
 ### Example request
@@ -88,8 +90,9 @@ and hash manager, so no database is needed to run them:
 npm test
 ```
 
-> **Note:** four of the nine tests currently fail against mock data that has drifted from the
-> business rules. They are a known issue and are next on the list to fix.
+The database mock filters its seed data the same way the real Knex queries filter the tables, so
+a product that is not seeded genuinely comes back as no match. That is what lets the conflict and
+validation rules be exercised rather than assumed.
 
 ## Challenge brief
 
