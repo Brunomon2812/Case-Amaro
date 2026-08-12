@@ -4,16 +4,16 @@ import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"
 import { ProductDatabaseMock } from "../mocks/ProductDatabaseMock"
 
-describe("Testando o método do ProductBusiness", () => {
+describe("ProductBusiness.getProducts", () => {
     const productBusiness = new ProductBusiness(
         new ProductDatabaseMock(),
         new IdGeneratorMock(),
         new HashManagerMock(),
     )
 
-    test("getProducts bem sucedido", async () => {
+    test("returns the registered products", async () => {
         const response = await productBusiness.getProducts()
-        // O matcher .toEqual() lida com valores não-primitivos Arrays e objetos
+        // The .toEqual() matcher handles non-primitive values such as arrays and objects
         expect(response).toEqual([
             {
                 "id": "8104",

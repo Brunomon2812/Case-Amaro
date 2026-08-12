@@ -5,14 +5,14 @@ import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"
 import { ProductDatabaseMock } from "../mocks/ProductDatabaseMock"
 
-describe("Testando o método do ProductBusiness", () => {
+describe("ProductBusiness.searchProducts", () => {
     const productBusiness = new ProductBusiness(
         new ProductDatabaseMock(),
         new IdGeneratorMock(),
         new HashManagerMock(),
     )
 
-    test("searchProduct bem sucedido", async () => {
+    test("returns the products matching the search term", async () => {
         const searchProduct = "BABADO" 
 
         const response = await productBusiness.searchProducts(searchProduct)
@@ -83,7 +83,7 @@ describe("Testando o método do ProductBusiness", () => {
         ])
 })
 
-test("Retorna um erro caso o campo de busca estiver vazio", async () => {
+test("returns an error when the search field is empty", async () => {
     try {
         const searchProduct = ""
         await productBusiness.searchProducts(searchProduct)
@@ -91,7 +91,7 @@ test("Retorna um erro caso o campo de busca estiver vazio", async () => {
         if (error instanceof BaseError){
 
             expect(error.statusCode).toEqual(400)
-            expect(error.message).toEqual(`Digite na busca o produto que voce esta buscando`)
+            expect(error.message).toEqual(`Type the product you are searching for`)
         }
     }
 

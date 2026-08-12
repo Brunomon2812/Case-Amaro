@@ -18,21 +18,21 @@ export class ProductBusiness {
         const { id, name, tags } = input
 
         if (typeof name !== "string") {
-            throw new ParamsError("Parâmetro 'name' inválido: deve ser uma string")
+            throw new ParamsError("Invalid 'name' parameter: must be a string")
         }
 
         if (typeof id !== "string") {
-            throw new ParamsError("Parâmetro 'id' inválido: deve ser uma string")
+            throw new ParamsError("Invalid 'id' parameter: must be a string")
         }
 
         if (name.length < 3) {
-            throw new ParamsError("Parâmetro 'name' inválido: mínimo de 3 caracteres")
+            throw new ParamsError("Invalid 'name' parameter: must be at least 3 characters long")
         }
 
         const isProductAlreadyExists = await this.productDatabase.findProductByIdAndName(input)
 
         if (isProductAlreadyExists) {
-            throw new ConflictError("Produto já cadastrado")
+            throw new ConflictError("Product already registered")
         }
 
         const product: IProductDB = {
@@ -69,7 +69,7 @@ export class ProductBusiness {
         }
 
         const response = {
-            message: "Produto criado com sucesso!",
+            message: "Product created successfully!",
         }
 
         return response
@@ -81,7 +81,7 @@ export class ProductBusiness {
         const productDB = await this.productDatabase.getProducts()
 
         if (!productDB) {
-            throw new NotFoundError("Nenhum produto cadastrado")
+            throw new NotFoundError("No products registered")
         }
 
         return productDB
@@ -102,7 +102,7 @@ export class ProductBusiness {
         }
 
         if (!results) {
-            throw new NotFoundError("Nenhum produto cadastrado")
+            throw new NotFoundError("No products registered")
         }
 
         return results

@@ -30,9 +30,9 @@ Content-Type: application/json
 
 {
     "id": "0003",
-    "name": "Vestido Prata",
-    "tags": ["furado", "sujo", "balada"]
+    "name": "Silver Dress",
+    "tags": ["ripped", "dirty", "party"]
 }
 
 ### Search Products
-GET http://localhost:3003/products/search?key=balada
+GET http://localhost:3003/products/search?key=party

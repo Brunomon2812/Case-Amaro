@@ -5,32 +5,31 @@ import { HashManagerMock } from "../mocks/HashManagerMock"
 import { IdGeneratorMock } from "../mocks/IdGeneratorMock"
 import { ProductDatabaseMock } from "../mocks/ProductDatabaseMock"
 
-// Agrupa os testes para dar semântica (suíte/grupo de testes)
-// O primeiro argumento é uma string de descricao do grupo.
-// O segundo argumento é um callback com seu conteudo. Normalmente é uma funcao anonima arrow function
-describe("Testando o método do ProductBusiness", () => {
+// Groups related tests into a suite.
+// The first argument describes the group.
+// The second argument is a callback holding the tests, usually an arrow function.
+describe("ProductBusiness.createProduct", () => {
     const productBusiness = new ProductBusiness(
         new ProductDatabaseMock(),
         new IdGeneratorMock(),
         new HashManagerMock(),
     )
 
-    // Vem dentro do callback do describe e guarda um teste unico
-    // O primeiro argumento é uma string de descricao do teste
-    // O segundo argumento é um callback que pode ser assincrono
-    // expect() é a assertiva, uma afirmacao que o Jest ira avaliar
-    test("createProduct bem sucedido", async () => {
+    // Each test lives inside the describe callback.
+    // The first argument describes the test, the second is a callback that may be async.
+    // expect() is the assertion Jest evaluates.
+    test("creates a product successfully", async () => {
         let input: ICreateProductInputDTO = {
             id: "8314",
             name: "VESTIDO PLISSADO ACINTURADO",
             tags: ["casual", "viagem", "delicado"]
         }
         const response = await productBusiness.createProduct(input)
-        expect(response.message).toEqual(`Produto criado com sucesso!`)
+        expect(response.message).toEqual(`Product created successfully!`)
     })
 
 
-    test("Retorna um erro caso o produto nao esteja cadastrado", async () => {
+    test("returns an error when the product is not registered", async () => {
         try {
             let input: ICreateProductInputDTO = {
                 id: "8314",
@@ -41,7 +40,7 @@ describe("Testando o método do ProductBusiness", () => {
         } catch (error: unknown) {
             if (error instanceof BaseError) {
                 expect(error.statusCode).toEqual(409)
-                expect(error.message).toEqual(`Nao autenticado`)
+                expect(error.message).toEqual(`Not authenticated`)
 
             }
         }
@@ -49,7 +48,7 @@ describe("Testando o método do ProductBusiness", () => {
     })
 
 
-    test("Retorna um erro caso o produto nao esteja cadastrado", async () => {
+    test("returns an error when the product is not registered", async () => {
         try {
             let input: ICreateProductInputDTO = {
                 id: "",
@@ -60,14 +59,14 @@ describe("Testando o método do ProductBusiness", () => {
         } catch (error: unknown) {
             if (error instanceof BaseError) {
                 expect(error.statusCode).toEqual(409)
-                expect(error.message).toEqual(`Produto já cadastrado`)
+                expect(error.message).toEqual(`Product already registered`)
 
             }
         }
 
     })
 
-    test("Retorna um erro caso o produto ja exista", async () => {
+    test("returns an error when the product already exists", async () => {
         try {
             let input: ICreateProductInputDTO = {
                 id: "8314",
@@ -78,14 +77,14 @@ describe("Testando o método do ProductBusiness", () => {
         } catch (error: unknown) {
             if (error instanceof BaseError) {
                 expect(error.statusCode).toEqual(409)
-                expect(error.message).toEqual(`Produto já cadastrado`)
+                expect(error.message).toEqual(`Product already registered`)
 
             }
         }
     })
 
 
-    test("Retorna um erro caso o name nao seja uma string", async () => {
+    test("returns an error when name is not a string", async () => {
         try {
             const input = {
                 id: `8314`,
@@ -97,12 +96,12 @@ describe("Testando o método do ProductBusiness", () => {
         } catch (error: unknown) {
             if (error instanceof BaseError) {
                 expect(error.statusCode).toEqual(400)
-                expect(error.message).toEqual(`Parâmetro 'name' inválido: deve ser uma string`)
+                expect(error.message).toEqual(`Invalid 'name' parameter: must be a string`)
             }
         }
     })
 
-    test("Retorna erro caso o name tenha menos que 3 caracteres", async () => {
+    test("returns an error when name is shorter than 3 characters", async () => {
         try {
             const input = {
                 id: `8314`,
@@ -114,7 +113,7 @@ describe("Testando o método do ProductBusiness", () => {
         } catch (error: unknown) {
             if (error instanceof BaseError) {
                 expect(error.statusCode).toEqual(400)
-                expect(error.message).toEqual(`Parâmetro 'name' inválido: mínimo de 3 caracteres`)
+                expect(error.message).toEqual(`Invalid 'name' parameter: must be at least 3 characters long`)
             }
         }
 

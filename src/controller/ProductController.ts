@@ -23,7 +23,7 @@ export class ProductController {
             if (error instanceof BaseError) {
                 return res.status(error.statusCode).send({ message: error.message })
             }
-            res.status(500).send({ message: "Erro inesperado ao cadastrar o produto" })
+            res.status(500).send({ message: "Unexpected error while creating the product" })
         }
     }
 
@@ -36,7 +36,7 @@ export class ProductController {
             if (error instanceof BaseError) {
                 return res.status(error.statusCode).send({ message: error.message })
             }
-            res.status(500).send({ message: "Erro inesperado ao buscar produto" })
+            res.status(500).send({ message: "Unexpected error while fetching products" })
         }
     }
 
@@ -50,7 +50,7 @@ export class ProductController {
             if (error instanceof BaseError) {
                 return res.status(error.statusCode).send({ message: error.message })
             }
-            res.status(500).send({ message: "Erro inesperado ao buscar produto" })
+            res.status(500).send({ message: "Unexpected error while fetching products" })
         }
     }
 }

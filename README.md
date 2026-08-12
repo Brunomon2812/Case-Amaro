@@ -1,46 +1,100 @@
 # Amaro Back-End Challenge 👕
 
-## 🚀 Descrição do Projeto
+A REST API for registering and querying products, built as a technical challenge proposed by
+[AMARO](https://github.com/amaroteam/back-end-challenge).
 
-O projeto é um case proposto pela empresa Amaro, e consiste na criação de uma API para cadastro e consulta de produtos. O deploy foi feito no Render e os endpoints foram testados no Postman.
+## About
 
-## 📋 Funcionalidades
+The API stores products and the tags attached to them, and exposes a single search endpoint that
+matches on id, name **or** tag. Searching by a tag or a name returns every product matching that
+term.
 
- O sistema permite de forma simplificada, a consulta de produtos por: id, nome ou tags. Caso a consulta seja por uma tag ou nome, sera exibida a lista com todos os produtos com aquela respectiva busca.
+Tags are deduplicated on write: creating a product with a tag that already exists reuses the
+existing tag row rather than inserting a duplicate, and the product–tag relationship is stored in
+a join table.
 
-## 🔗 Link para a documentação no Postman
-[Postman](https://documenter.getpostman.com/view/21554400/2s8YK4t7pC) :link:
+## Architecture
 
+The code follows a layered structure, with each layer depending on the one below it through
+constructor injection. That is what makes the business layer testable without a database.
 
-### 🔧 Configurações de Ambiente / Instalação
+```
+router      → wires the HTTP routes and injects dependencies
+controller  → parses the request, maps errors to status codes
+business    → validation and business rules
+database    → Knex queries
+```
 
-Para rodar o projeto na máquina local é necessário rodar os seguintes comandos:
+Errors are modelled as classes extending a `BaseError` that carries its own status code, so the
+controller maps any known error to the right HTTP response and falls back to 500 for the rest.
 
-##### `cd ../case-backend-amaro`
+## Endpoints
 
-##### `npm install`
+Base path: `/products`
 
-##### `npm dev`
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `POST` | `/products` | Register a product with its tags |
+| `GET` | `/products` | List every registered product |
+| `GET` | `/products/search?key=<term>` | Search by id, name or tag |
 
+**Postman documentation:** https://documenter.getpostman.com/view/21554400/2s8YK4t7pC
 
-## 🛠️ Tecnologias Utilizadas
+### Example request
 
-- [TypeScript](https://www.typescriptlang.org/)  
-- [Node.JS](https://nodejs.org/en/) 
-- [Knex](https://knexjs.org/)  
-- [Render](https://render.com/) 
-- [Jest](https://jestjs.io/) 
+```http
+POST /products
+Content-Type: application/json
 
-Foram realizados **testes unitários** neste projeto com o _framework_ Jest.
-A cobertura de testes pode ser conferida na imagem abaixo.
-<br><br>
-![Screen Shot 2022-10-27 at 2 43 29 PM](https://user-images.githubusercontent.com/104601906/198384952-9b62685f-3ceb-4e81-b28f-17b509367e21.png)
+{
+  "id": "0003",
+  "name": "Silver Dress",
+  "tags": ["ripped", "dirty", "party"]
+}
+```
 
-## Repositório com o desafio proposto
-[Desafio Amaro](https://github.com/amaroteam/back-end-challenge)
+## Tech stack
 
-## AUTOR
+- [TypeScript](https://www.typescriptlang.org/)
+- [Node.js](https://nodejs.org/en/) with Express
+- [Knex](https://knexjs.org/) over MySQL
+- [Jest](https://jestjs.io/) for unit tests
+- Deployed on [Render](https://render.com/)
 
-Bruno Monteiro  | https://github.com/Brunomon2812
---------- | ------
-[<img src="https://avatars.githubusercontent.com/Brunomon2812" width="75px;"/>](https://github.com/Brunomon2812) | [Bruno Monteiro](https://github.com/Brunomon2812)
+## Running it locally
+
+```bash
+git clone https://github.com/Brunomon2812/Case-Amaro.git
+cd Case-Amaro
+npm install
+```
+
+Create a `.env` file with the database connection details, then run the migrations and start the
+server:
+
+```bash
+npm run migrations
+npm run dev
+```
+
+The API listens on port 3003 by default.
+
+## Tests
+
+The business layer is unit tested with Jest against in-memory mocks of the database, id generator
+and hash manager, so no database is needed to run them:
+
+```bash
+npm test
+```
+
+> **Note:** four of the nine tests currently fail against mock data that has drifted from the
+> business rules. They are a known issue and are next on the list to fix.
+
+## Challenge brief
+
+The original specification for this challenge: [amaroteam/back-end-challenge](https://github.com/amaroteam/back-end-challenge)
+
+## Author
+
+Bruno Monteiro — [GitHub](https://github.com/Brunomon2812) · [LinkedIn](https://www.linkedin.com/in/brunoarmonteiro/)
